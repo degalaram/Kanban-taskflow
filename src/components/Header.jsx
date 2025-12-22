@@ -9,20 +9,15 @@ import { setSearchQuery } from '../store/slices/kanbanSlice';
 import { LogOut, User, Zap, RefreshCw, Search, Sun, Moon, X, Menu } from 'lucide-react';
 
 const Header = ({ onMenuToggle, isMobileMenuOpen }) => {
-  // STEP 1: Get dispatch function
   const dispatch = useDispatch();
 
-  // STEP 2: Get user and auth data from Redux
   const { user, session, isRefreshing } = useSelector((state) => state.auth);
 
-  // STEP 3: Get kanban data
   const { isSaving, searchQuery } = useSelector((state) => state.kanban);
 
-  // STEP 4: Local search state
   const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  // STEP 5: Theme state - dark or light mode
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('taskflow_theme');
@@ -32,7 +27,6 @@ const Header = ({ onMenuToggle, isMobileMenuOpen }) => {
     return false;
   });
 
-  // STEP 6: Apply theme changes to document
   useEffect(() => {
     const root = document.documentElement;
     if (isDarkMode) {
@@ -44,30 +38,25 @@ const Header = ({ onMenuToggle, isMobileMenuOpen }) => {
     }
   }, [isDarkMode]);
 
-  // STEP 7: Logout function
   const handleLogout = () => {
     dispatch(logout());
   };
 
-  // STEP 8: Toggle theme
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
   };
 
-  // STEP 9: Update search query in Redux
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setLocalSearchQuery(value);
     dispatch(setSearchQuery(value));
   };
 
-  // STEP 10: Clear search
   const handleClearSearch = () => {
     setLocalSearchQuery('');
     dispatch(setSearchQuery(''));
   };
 
-  // STEP 11: Calculate token expiration time
   const getTokenStatus = () => {
     if (!session) return null;
     

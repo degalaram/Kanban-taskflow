@@ -15,10 +15,7 @@ const AddTaskForm = ({ sectionId, onClose }) => {
   // STEP 2: Get dispatch function
   const dispatch = useDispatch();
 
-  // STEP 3: Handle form submission
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    
+  
     // Check if title is not empty
     if (title.trim()) {
       // Send add task action to Redux
@@ -46,7 +43,6 @@ const AddTaskForm = ({ sectionId, onClose }) => {
 
   return (
     <form onSubmit={handleSubmit} className="bg-kanban-task rounded-lg border border-border p-3 mb-2 animate-slide-up">
-      {/* STEP 5: Title Input */}
       <input
         type="text"
         value={title}
@@ -56,7 +52,6 @@ const AddTaskForm = ({ sectionId, onClose }) => {
         autoFocus
       />
 
-      {/* STEP 6: Description Input */}
       <textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
@@ -65,7 +60,6 @@ const AddTaskForm = ({ sectionId, onClose }) => {
         rows={2}
       />
 
-      {/* STEP 7: Action Buttons */}
       <div className="flex items-center gap-2 mt-3">
         {/* Submit button - disabled if title is empty */}
         <button

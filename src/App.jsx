@@ -17,7 +17,7 @@ import NotFound from './pages/NotFound';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 
-// STEP 1: Protected Route Component
+// Protected Route Component
 // Redirects to login if user is not authenticated
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -31,7 +31,7 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
-// STEP 2: Public Route Component
+// Public Route Component
 // Redirects to dashboard if user is already authenticated
 const PublicRoute = ({ children }) => {
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -45,7 +45,6 @@ const PublicRoute = ({ children }) => {
   return children;
 };
 
-// STEP 3: Layout Component for authenticated pages
 const AuthenticatedLayout = ({ children }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   
@@ -65,7 +64,6 @@ const AuthenticatedLayout = ({ children }) => {
   );
 };
 
-// STEP 4: Main App Component
 const App = () => {
   return (
     <>

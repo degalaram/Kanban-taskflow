@@ -16,17 +16,13 @@ import KanbanSection from './KanbanSection';
 import { Plus, X, Loader2 } from 'lucide-react';
 
 const KanbanBoard = () => {
-  // STEP 1: State for adding new section
   const [isAddingSection, setIsAddingSection] = useState(false);
   const [newSectionTitle, setNewSectionTitle] = useState('');
 
-  // STEP 2: Get dispatch function
   const dispatch = useDispatch();
 
-  // STEP 3: Get data from Redux store
   const { sections, tasks, isLoading, searchQuery } = useSelector((state) => state.kanban);
 
-  // STEP 4: Filter tasks based on search query
   const getFilteredTasks = (sectionId) => {
     const sectionTasks = tasks[sectionId] || [];
     
@@ -44,12 +40,10 @@ const KanbanBoard = () => {
     );
   };
 
-  // STEP 5: Load kanban data when component loads
   useEffect(() => {
     dispatch(loadKanbanRequest());
   }, [dispatch]);
 
-  // STEP 6: Handle drag and drop operations
   const handleDragEnd = (result) => {
     const { destination, source, type } = result;
 
@@ -121,7 +115,6 @@ const KanbanBoard = () => {
     }
   };
 
-  // STEP 7: Handle adding new section
   const handleAddSection = (e) => {
     e.preventDefault();
     
@@ -135,13 +128,11 @@ const KanbanBoard = () => {
     }
   };
 
-  // STEP 8: Handle cancel adding section
   const handleCancelAddSection = () => {
     setNewSectionTitle('');
     setIsAddingSection(false);
   };
 
-  // STEP 9: Show loading screen
   if (isLoading) {
     return (
       <div className="flex-1 flex items-center justify-center">
@@ -153,7 +144,6 @@ const KanbanBoard = () => {
     );
   }
 
-  // STEP 10: Count tasks for display
   const totalFilteredTasks = sections.reduce(
     (acc, section) => acc + getFilteredTasks(section.id).length,
     0

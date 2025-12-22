@@ -22,16 +22,13 @@ import {
 } from 'lucide-react';
 
 const KanbanSection = ({ section, tasks, allTasks, index, isFiltering }) => {
-  // STEP 1: Local state
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(section.title);
 
-  // STEP 2: Get dispatch function
   const dispatch = useDispatch();
 
-  // STEP 3: Get section color based on title
   const getSectionColor = () => {
     const title = section.title.toLowerCase();
     if (title.includes('done') || title.includes('complete')) {
