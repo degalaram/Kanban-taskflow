@@ -1,0 +1,231 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* TaskFlow Design System - Professional Task Management Theme */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    /* Primary - Deep Blue */
+    --primary: 217 91% 45%;
+    --primary-foreground: 0 0% 100%;
+    
+    /* Background - Clean whites and light grays */
+    --background: 220 20% 97%;
+    --foreground: 222 47% 11%;
+
+    /* Card surfaces */
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    /* Popover */
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Secondary - Slate */
+    --secondary: 214 32% 91%;
+    --secondary-foreground: 222 47% 11%;
+
+    /* Muted */
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+
+    /* Accent - Teal */
+    --accent: 174 62% 47%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 217 91% 45%;
+
+    /* Radius */
+    --radius: 0.5rem;
+
+    /* Sidebar */
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 220 14% 96%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 47% 18%;
+    --sidebar-accent-foreground: 220 14% 96%;
+    --sidebar-border: 220 32% 18%;
+    --sidebar-ring: 217 91% 60%;
+
+    /* Custom TaskFlow Colors */
+    --todo: 217 91% 60%;
+    --todo-light: 217 91% 95%;
+    --inprogress: 38 92% 50%;
+    --inprogress-light: 38 92% 95%;
+    --done: 142 71% 45%;
+    --done-light: 142 71% 95%;
+    
+    /* Kanban specific */
+    --kanban-bg: 220 20% 94%;
+    --section-bg: 220 14% 96%;
+    --task-bg: 0 0% 100%;
+    --task-hover: 220 14% 98%;
+    --drag-overlay: 217 91% 45% / 0.1;
+  }
+
+  .dark {
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 11%;
+    
+    --background: 222 47% 8%;
+    --foreground: 220 14% 96%;
+
+    --card: 222 47% 11%;
+    --card-foreground: 220 14% 96%;
+
+    --popover: 222 47% 11%;
+    --popover-foreground: 220 14% 96%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 220 14% 96%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 174 62% 47%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 220 14% 96%;
+
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 217 91% 60%;
+
+    --sidebar-background: 222 47% 6%;
+    --sidebar-foreground: 220 14% 96%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 217 33% 15%;
+    --sidebar-accent-foreground: 220 14% 96%;
+    --sidebar-border: 217 33% 15%;
+    --sidebar-ring: 217 91% 60%;
+
+    --kanban-bg: 222 47% 6%;
+    --section-bg: 222 47% 11%;
+    --task-bg: 217 33% 17%;
+    --task-hover: 217 33% 20%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer utilities {
+  /* Custom animations */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+
+  .animate-slide-right {
+    animation: slideRight 0.3s ease-out;
+  }
+
+  .animate-pulse-soft {
+    animation: pulseSoft 2s ease-in-out infinite;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { 
+      opacity: 0; 
+      transform: translateY(10px); 
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0); 
+    }
+  }
+
+  @keyframes slideRight {
+    from { 
+      opacity: 0; 
+      transform: translateX(-10px); 
+    }
+    to { 
+      opacity: 1; 
+      transform: translateX(0); 
+    }
+  }
+
+  @keyframes pulseSoft {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  /* Task card shadow */
+  .task-shadow {
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  }
+
+  .task-shadow-hover {
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+
+  /* Dragging state */
+  .dragging {
+    @apply opacity-50 scale-[1.02];
+  }
+
+  .drag-over {
+    @apply ring-2 ring-primary ring-offset-2;
+  }
+
+  /* Status colors */
+  .status-todo {
+    @apply bg-[hsl(var(--todo-light))] border-l-4 border-[hsl(var(--todo))];
+  }
+
+  .status-inprogress {
+    @apply bg-[hsl(var(--inprogress-light))] border-l-4 border-[hsl(var(--inprogress))];
+  }
+
+  .status-done {
+    @apply bg-[hsl(var(--done-light))] border-l-4 border-[hsl(var(--done))];
+  }
+
+  /* Scrollbar styling */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/20 rounded-full;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/40;
+  }
+}
