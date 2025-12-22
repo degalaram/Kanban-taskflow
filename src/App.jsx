@@ -7,6 +7,7 @@ import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from '@/components/ui/sonner';
+import ErrorBoundary from './components/ErrorBoundary';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import AllTasksPage from './pages/AllTasksPage';
@@ -51,7 +52,7 @@ const AuthenticatedLayout = ({ children }) => {
   return (
     <div className="min-h-screen bg-kanban-bg flex flex-col">
       {/* Header at top */}
-      <Header onMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)} isMobileMenuOpen={isMobileMenuOpen} />
+      <Header onMenuToggle={() => setIsMobileMenuOpen((v) => !v)} isMobileMenuOpen={isMobileMenuOpen} />
       
       {/* Sidebar and main content below */}
       <div className="flex-1 flex overflow-hidden">
@@ -66,7 +67,7 @@ const AuthenticatedLayout = ({ children }) => {
 
 const App = () => {
   return (
-    <>
+    <ErrorBoundary>
       {/* Toaster components for notifications */}
       <Toaster />
       <Sonner />
@@ -157,7 +158,7 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </HashRouter>
-    </>
+    </ErrorBoundary>
   );
 };
 

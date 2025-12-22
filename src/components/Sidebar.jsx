@@ -26,8 +26,13 @@ const Sidebar = ({ isMobileMenuOpen, onMobileMenuClose }) => {
 
   // Close mobile menu on route change
   useEffect(() => {
+    // Only close when the route actually changes. Don't depend on the
+    // `onMobileMenuClose` prop (it's recreated each render by the parent),
+    // otherwise this effect runs on every render and immediately hides the
+    // drawer after it opens.
     onMobileMenuClose();
-  }, [location.pathname, onMobileMenuClose]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
 
   // Calculate task statistics
   const stats = useMemo(() => {
@@ -128,26 +133,30 @@ const Sidebar = ({ isMobileMenuOpen, onMobileMenuClose }) => {
 
   return (
     <>
-      {/* Mobile Overlay - click to close menu */}
-      {isMobileMenuOpen && (
-        <div 
-          className="md:hidden fixed inset-0 bg-black/50 z-30"
-          onClick={onMobileMenuClose}
-        />
-      )}
+      {/* Mobile overlay + drawer (only on small screens) */}
+      <div className="md:hidden">
+        {isMobileMenuOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-30 top-16"
+            onClick={onMobileMenuClose}
+          />
+        )}
 
-      {/* Sidebar - Desktop: visible in flex layout, Mobile: overlay drawer */}
-      <aside 
-        className={`
-          bg-sidebar text-sidebar-foreground flex flex-col
-          w-64 h-screen
-          transition-transform duration-300 ease-in-out
-          md:relative md:h-auto md:w-64 md:translate-x-0 md:sticky md:top-0
-          fixed left-0 top-0 z-40
-          ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-        `}
-      >
-        <SidebarContent />
+        <aside
+          aria-hidden={!isMobileMenuOpen}
+          className={`fixed left-0 top-16 z-40 h-[calc(100vh-4rem)] w-64 bg-sidebar text-sidebar-foreground transform transition-transform duration-300 ease-in-out ${
+            isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
+          <SidebarContent />
+        </aside>
+      </div>
+
+      {/* Desktop sidebar (visible on md and up) */}
+      <aside className="hidden md:flex md:flex-col md:w-64 md:relative md:top-0 md:h-auto">
+        <div className="bg-sidebar text-sidebar-foreground flex flex-col w-64">
+          <SidebarContent />
+        </div>
       </aside>
     </>
   );

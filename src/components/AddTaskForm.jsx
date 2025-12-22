@@ -15,22 +15,16 @@ const AddTaskForm = ({ sectionId, onClose }) => {
   // STEP 2: Get dispatch function
   const dispatch = useDispatch();
 
-  
+  const handleSubmit = (e) => {
+    e.preventDefault();
     // Check if title is not empty
     if (title.trim()) {
-      // Send add task action to Redux
-      dispatch(addTaskRequest({
-        sectionId,
-        title: title.trim(),
-        description: description.trim(),
-      }));
-      
+      dispatch(addTaskRequest({ sectionId, title: title.trim(), description: description.trim() }));
       // Clear form
       setTitle('');
       setDescription('');
-      
-      // Close form
-      onClose();
+      // Close form if provided
+      if (onClose) onClose();
     }
   };
 

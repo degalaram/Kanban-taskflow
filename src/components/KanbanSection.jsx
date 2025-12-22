@@ -47,7 +47,6 @@ const KanbanSection = ({ section, tasks, allTasks, index, isFiltering }) => {
     done: 'bg-done',
   };
 
-  // STEP 4: Delete section
   const handleDelete = () => {
     if (window.confirm('Are you sure you want to delete this section and all its tasks?')) {
       dispatch(deleteSectionRequest(section.id));
@@ -55,14 +54,12 @@ const KanbanSection = ({ section, tasks, allTasks, index, isFiltering }) => {
     setIsMenuOpen(false);
   };
 
-  // STEP 5: Start editing section title
   const handleEditStart = () => {
     setEditTitle(section.title);
     setIsEditing(true);
     setIsMenuOpen(false);
   };
 
-  // STEP 6: Save edited section title
   const handleEditSave = () => {
     if (editTitle.trim()) {
       dispatch(updateSectionRequest({
@@ -73,13 +70,11 @@ const KanbanSection = ({ section, tasks, allTasks, index, isFiltering }) => {
     }
   };
 
-  // STEP 7: Cancel editing
   const handleEditCancel = () => {
     setIsEditing(false);
     setEditTitle(section.title);
   };
 
-  // STEP 8: Handle key press in edit mode
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleEditSave();

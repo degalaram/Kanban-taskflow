@@ -22,25 +22,19 @@ import {
 } from 'lucide-react';
 
 const TaskCard = ({ task, index, sectionId }) => {
-  // STEP 1: Local state for UI
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(task.title);
   const [editDescription, setEditDescription] = useState(task.description);
   const [showMoveMenu, setShowMoveMenu] = useState(false);
-
-  // STEP 2: Get functions from Redux
   const dispatch = useDispatch();
   const { sections, tasks } = useSelector((state) => state.kanban);
-
-  // STEP 3: Delete task function
   const handleDelete = () => {
     // Send delete request to Redux
     dispatch(deleteTaskRequest({ sectionId, taskId: task.id }));
     setIsMenuOpen(false);
   };
 
-  // STEP 4: Start editing
   const handleEditStart = () => {
     setEditTitle(task.title);
     setEditDescription(task.description);
@@ -48,7 +42,6 @@ const TaskCard = ({ task, index, sectionId }) => {
     setIsMenuOpen(false);
   };
 
-  // STEP 5: Save edited task
   const handleEditSave = () => {
     if (editTitle.trim()) {
       // Send update to Redux
@@ -64,14 +57,12 @@ const TaskCard = ({ task, index, sectionId }) => {
     }
   };
 
-  // STEP 6: Cancel editing
   const handleEditCancel = () => {
     setIsEditing(false);
     setEditTitle(task.title);
     setEditDescription(task.description);
   };
 
-  // STEP 7: Toggle favorite
   const handleToggleFavorite = () => {
     dispatch(updateTaskRequest({
       sectionId,
@@ -83,7 +74,6 @@ const TaskCard = ({ task, index, sectionId }) => {
     setIsMenuOpen(false);
   };
 
-  // STEP 8: Move task to different section
   const handleMoveToSection = (targetSectionId) => {
     // Don't move to same section
     if (targetSectionId === sectionId) return;

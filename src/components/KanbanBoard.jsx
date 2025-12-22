@@ -1,6 +1,5 @@
 // Kanban Board Component
 // Main board with drag-and-drop support for sections and tasks
-// SIMPLIFIED VERSION - with clear step-by-step comments
 
 import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
@@ -155,7 +154,7 @@ const KanbanBoard = () => {
 
   return (
     <div className="flex-1 overflow-hidden">
-      {/* STEP 11: Board Header Section */}
+      {/* Board Header */}
       <div className="p-4 md:p-6 pb-2 md:pb-4">
         <h2 className="text-xl md:text-2xl font-bold text-foreground">Kanban Board</h2>
         <p className="text-sm md:text-base text-muted-foreground mt-1">
@@ -169,7 +168,7 @@ const KanbanBoard = () => {
         </p>
       </div>
 
-      {/* STEP 12: Drag Drop Context */}
+      {/* Drag Drop Context */}
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="board" type="section" direction="horizontal">
           {(provided) => (
@@ -178,7 +177,7 @@ const KanbanBoard = () => {
               {...provided.droppableProps}
               className="flex gap-2 md:gap-4 px-3 md:px-6 pb-6 overflow-x-auto custom-scrollbar h-[calc(100vh-8rem)] md:h-[calc(100vh-12rem)]"
             >
-              {/* STEP 13: Render all sections */}
+              {/* Render all sections */}
               {sections
                 .slice()
                 .sort((a, b) => a.order - b.order)
@@ -195,7 +194,7 @@ const KanbanBoard = () => {
 
               {provided.placeholder}
 
-              {/* STEP 14: Add Section Button/Form */}
+              {/* Add Section Button/Form */}
               <div className="flex-shrink-0 w-72 sm:w-80 md:w-96">
                 {isAddingSection ? (
                   // Form to add new section
