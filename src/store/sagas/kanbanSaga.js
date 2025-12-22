@@ -1,7 +1,8 @@
 // Kanban Saga - Handles side effects for Kanban board operations
-// All API calls and localStorage operations are managed here
+// This file manages data loading, saving, and operations like add/update/delete
+// SIMPLIFIED VERSION - with clear step-by-step comments
 
-import { put, call, takeLatest, select, delay } from 'redux-saga/effects';
+import { put, takeLatest } from 'redux-saga/effects';
 import {
   loadKanbanRequest,
   loadKanbanSuccess,
@@ -24,65 +25,60 @@ import {
   moveTaskSuccess,
   reorderTasksRequest,
   reorderTasksSuccess,
-  saveComplete,
   saveError,
 } from '../slices/kanbanSlice';
 
-// Simulated API delay time
+// STEP 1: Set delay time to simulate server response (in milliseconds)
 const API_DELAY = 800;
 
-// Helper function to generate unique ID
-const generateId = () => {
-  return Date.now().toString(36) + Math.random().toString(36).substr(2);
-};
+// STEP 2: Create unique ID using timestamp
+function generateId() {
+  return Date.now() + Math.random();
+}
 
-// Helper function to save data to localStorage
-const saveToLocalStorage = (sections, tasks) => {
+// STEP 3: Save data to browser storage
+function saveToLocalStorage(sections, tasks) {
   try {
+    // Convert object to string and save
     localStorage.setItem('taskflow_kanban', JSON.stringify({ sections, tasks }));
     return true;
   } catch (error) {
-    console.error('Error saving to localStorage:', error);
+    console.error('Error saving to storage:', error);
     return false;
   }
-};
+}
 
-// Helper function to load data from localStorage
-const loadFromLocalStorage = () => {
+// STEP 4: Load data from browser storage
+function loadFromLocalStorage() {
   try {
     const data = localStorage.getItem('taskflow_kanban');
     if (data) {
-      return JSON.parse(data);
+      return JSON.parse(data); // Convert string back to object
     }
   } catch (error) {
-    console.error('Error loading from localStorage:', error);
+    console.error('Error loading from storage:', error);
   }
   return null;
-};
+}
 
-// Simulated API call wrapper
-// This adds artificial delay to simulate network latency
-const simulateApiCall = (data) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(data);
-    }, API_DELAY);
-  });
-};
+// ============================================
+// HANDLER FUNCTIONS - Handle each action
+// ============================================
 
-// === LOAD KANBAN DATA SAGA ===
+// HANDLER 1: Load kanban data when app starts
 function* handleLoadKanban() {
   try {
-    // Simulate API delay
-    yield delay(API_DELAY);
+    // Wait for API_DELAY milliseconds to simulate network
+    yield new Promise(resolve => setTimeout(resolve, API_DELAY));
     
-    // Load from localStorage
+    // Try to load from storage
     const data = loadFromLocalStorage();
     
     if (data) {
+      // Found saved data - load it
       yield put(loadKanbanSuccess(data));
     } else {
-      // Return default data if nothing in localStorage
+      // No saved data - use defaults
       const defaultData = {
         sections: [
           { id: 'section-1', title: 'To Do', order: 0 },
@@ -96,101 +92,91 @@ function* handleLoadKanban() {
         },
       };
       
-      // Save default data to localStorage
+      // Save defaults to storage
       saveToLocalStorage(defaultData.sections, defaultData.tasks);
       
+      // Load defaults into state
       yield put(loadKanbanSuccess(defaultData));
     }
   } catch (error) {
+    // If error occurs, show error message
     yield put(loadKanbanFailure(error.message));
   }
 }
 
-// === ADD SECTION SAGA ===
+// HANDLER 2: Add new section
 function* handleAddSection(action) {
   try {
-    yield delay(API_DELAY);
+    // Wait for delay
+    yield new Promise(resolve => setTimeout(resolve, API_DELAY));
     
+    // Get data from action
     const { title } = action.payload;
     
-    // Get current state
-    const state = yield select((state) => state.kanban);
-    
-    // Create new section
+    // Create new section object
     const newSection = {
       id: 'section-' + generateId(),
       title: title,
-      order: state.sections.length,
+      order: Date.now(),
     };
     
-    // Update state first (optimistic update would dispatch success immediately)
+    // Add to Redux state
     yield put(addSectionSuccess(newSection));
     
-    // Get updated state and save to localStorage
-    const updatedState = yield select((state) => state.kanban);
-    saveToLocalStorage(updatedState.sections, updatedState.tasks);
-    
   } catch (error) {
     yield put(saveError(error.message));
   }
 }
 
-// === UPDATE SECTION SAGA ===
+// HANDLER 3: Update section title
 function* handleUpdateSection(action) {
   try {
-    yield delay(API_DELAY);
+    yield new Promise(resolve => setTimeout(resolve, API_DELAY));
     
+    // Update section in state
     yield put(updateSectionSuccess(action.payload));
     
-    // Save to localStorage
-    const state = yield select((state) => state.kanban);
-    saveToLocalStorage(state.sections, state.tasks);
-    
   } catch (error) {
     yield put(saveError(error.message));
   }
 }
 
-// === DELETE SECTION SAGA ===
+// HANDLER 4: Delete section
 function* handleDeleteSection(action) {
   try {
-    yield delay(API_DELAY);
+    yield new Promise(resolve => setTimeout(resolve, API_DELAY));
     
+    // Remove section from state
     yield put(deleteSectionSuccess(action.payload));
     
-    // Save to localStorage
-    const state = yield select((state) => state.kanban);
-    saveToLocalStorage(state.sections, state.tasks);
-    
   } catch (error) {
     yield put(saveError(error.message));
   }
 }
 
-// === REORDER SECTIONS SAGA ===
+// HANDLER 5: Reorder sections (when dragging)
 function* handleReorderSections(action) {
   try {
-    yield delay(300); // Shorter delay for reordering
+    // Faster delay for drag-drop
+    yield new Promise(resolve => setTimeout(resolve, 300));
     
+    // Update section order in state
     yield put(reorderSectionsSuccess(action.payload));
-    
-    // Save to localStorage
-    const state = yield select((state) => state.kanban);
-    saveToLocalStorage(state.sections, state.tasks);
     
   } catch (error) {
     yield put(saveError(error.message));
   }
 }
 
-// === ADD TASK SAGA ===
+// HANDLER 6: Add new task
 function* handleAddTask(action) {
   try {
-    yield delay(API_DELAY);
+    yield new Promise(resolve => setTimeout(resolve, API_DELAY));
     
+    // Get data from action
     const { sectionId, title, description } = action.payload;
     
-    // Create new task
+    // Create new task object
     const newTask = {
       id: 'task-' + generateId(),
       title: title,
@@ -200,92 +186,84 @@ function* handleAddTask(action) {
       updatedAt: new Date().toISOString(),
     };
     
+    // Add to state
     yield put(addTaskSuccess({ sectionId, task: newTask }));
-    
-    // Save to localStorage
-    const state = yield select((state) => state.kanban);
-    saveToLocalStorage(state.sections, state.tasks);
     
   } catch (error) {
     yield put(saveError(error.message));
   }
 }
 
-// === UPDATE TASK SAGA ===
+// HANDLER 7: Update task
 function* handleUpdateTask(action) {
   try {
-    yield delay(API_DELAY);
+    yield new Promise(resolve => setTimeout(resolve, API_DELAY));
     
+    // Create updates object with timestamp
     const updates = {
       ...action.payload.updates,
       updatedAt: new Date().toISOString(),
     };
     
+    // Update task in state
     yield put(updateTaskSuccess({
       sectionId: action.payload.sectionId,
       taskId: action.payload.taskId,
       updates,
     }));
     
-    // Save to localStorage
-    const state = yield select((state) => state.kanban);
-    saveToLocalStorage(state.sections, state.tasks);
-    
   } catch (error) {
     yield put(saveError(error.message));
   }
 }
 
-// === DELETE TASK SAGA ===
+// HANDLER 8: Delete task
 function* handleDeleteTask(action) {
   try {
-    yield delay(API_DELAY);
+    yield new Promise(resolve => setTimeout(resolve, API_DELAY));
     
+    // Remove task from state
     yield put(deleteTaskSuccess(action.payload));
     
-    // Save to localStorage
-    const state = yield select((state) => state.kanban);
-    saveToLocalStorage(state.sections, state.tasks);
-    
   } catch (error) {
     yield put(saveError(error.message));
   }
 }
 
-// === MOVE TASK SAGA ===
+// HANDLER 9: Move task between sections
 function* handleMoveTask(action) {
   try {
-    yield delay(300); // Shorter delay for drag operations
+    // Faster delay for drag-drop
+    yield new Promise(resolve => setTimeout(resolve, 300));
     
+    // Move task in state
     yield put(moveTaskSuccess(action.payload));
     
-    // Save to localStorage
-    const state = yield select((state) => state.kanban);
-    saveToLocalStorage(state.sections, state.tasks);
-    
   } catch (error) {
     yield put(saveError(error.message));
   }
 }
 
-// === REORDER TASKS SAGA ===
+// HANDLER 10: Reorder tasks in section
 function* handleReorderTasks(action) {
   try {
-    yield delay(300); // Shorter delay for reordering
+    // Faster delay for drag-drop
+    yield new Promise(resolve => setTimeout(resolve, 300));
     
+    // Update task order in state
     yield put(reorderTasksSuccess(action.payload));
-    
-    // Save to localStorage
-    const state = yield select((state) => state.kanban);
-    saveToLocalStorage(state.sections, state.tasks);
     
   } catch (error) {
     yield put(saveError(error.message));
   }
 }
 
-// Root kanban saga - watches for actions
+// ============================================
+// ROOT SAGA - Watch for and handle actions
+// ============================================
+
 export default function* kanbanSaga() {
+  // Watch for each action type and run the corresponding handler
   yield takeLatest(loadKanbanRequest.type, handleLoadKanban);
   yield takeLatest(addSectionRequest.type, handleAddSection);
   yield takeLatest(updateSectionRequest.type, handleUpdateSection);

@@ -1,5 +1,6 @@
 // Header Component
-// Displays the application header with logo, search, theme toggle, user info, and logout button
+// Top navigation bar with search, theme toggle, and user menu
+// SIMPLIFIED VERSION - clearer step-by-step comments
 
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,20 +9,20 @@ import { setSearchQuery } from '../store/slices/kanbanSlice';
 import { LogOut, User, Zap, RefreshCw, Search, Sun, Moon, X } from 'lucide-react';
 
 const Header = () => {
-  // Get dispatch function
+  // STEP 1: Get dispatch function
   const dispatch = useDispatch();
 
-  // Get auth state from Redux store
+  // STEP 2: Get user and auth data from Redux
   const { user, session, isRefreshing } = useSelector((state) => state.auth);
 
-  // Get kanban state
+  // STEP 3: Get kanban data
   const { isSaving, searchQuery } = useSelector((state) => state.kanban);
 
-  // Local search state (synced with Redux)
+  // STEP 4: Local search state
   const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  // Theme state
+  // STEP 5: Theme state - dark or light mode
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('taskflow_theme');
@@ -31,7 +32,7 @@ const Header = () => {
     return false;
   });
 
-  // Apply theme on mount and change
+  // STEP 6: Apply theme changes to document
   useEffect(() => {
     const root = document.documentElement;
     if (isDarkMode) {
@@ -43,30 +44,30 @@ const Header = () => {
     }
   }, [isDarkMode]);
 
-  // Handle logout button click
+  // STEP 7: Logout function
   const handleLogout = () => {
     dispatch(logout());
   };
 
-  // Toggle theme
+  // STEP 8: Toggle theme
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
   };
 
-  // Handle search input change - update Redux store in real-time
+  // STEP 9: Update search query in Redux
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setLocalSearchQuery(value);
     dispatch(setSearchQuery(value));
   };
 
-  // Handle clear search
+  // STEP 10: Clear search
   const handleClearSearch = () => {
     setLocalSearchQuery('');
     dispatch(setSearchQuery(''));
   };
 
-  // Calculate time until token expires
+  // STEP 11: Calculate token expiration time
   const getTokenStatus = () => {
     if (!session) return null;
     

@@ -1,5 +1,6 @@
-// App Component
-// Main application component with routing setup
+// App Component - Main application file
+// Handles routing and authentication
+// SIMPLIFIED VERSION - with clear step-by-step comments
 
 import React from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
@@ -16,35 +17,42 @@ import NotFound from './pages/NotFound';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 
-// Protected Route Component
+// STEP 1: Protected Route Component
 // Redirects to login if user is not authenticated
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useSelector((state) => state.auth);
   
+  // If not logged in, go to login page
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
   
+  // If logged in, show the page
   return children;
 };
 
-// Public Route Component
+// STEP 2: Public Route Component
 // Redirects to dashboard if user is already authenticated
 const PublicRoute = ({ children }) => {
   const { isAuthenticated } = useSelector((state) => state.auth);
   
+  // If already logged in, go to dashboard
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
   
+  // If not logged in, show the page
   return children;
 };
 
-// Layout Component for authenticated pages
+// STEP 3: Layout Component for authenticated pages
 const AuthenticatedLayout = ({ children }) => {
   return (
     <div className="min-h-screen bg-kanban-bg flex flex-col">
+      {/* Header at top */}
       <Header />
+      
+      {/* Sidebar and main content below */}
       <div className="flex-1 flex overflow-hidden">
         <Sidebar />
         <main className="flex-1 flex flex-col overflow-hidden">
@@ -55,15 +63,20 @@ const AuthenticatedLayout = ({ children }) => {
   );
 };
 
-// Main App Component
+// STEP 4: Main App Component
 const App = () => {
   return (
     <>
+      {/* Toaster components for notifications */}
       <Toaster />
       <Sonner />
+      
+      {/* Router setup */}
       <HashRouter>
         <Routes>
-          {/* Public Routes */}
+          {/* STEP 5: Public Routes */}
+          
+          {/* Login Page */}
           <Route
             path="/login"
             element={
@@ -73,15 +86,21 @@ const App = () => {
             }
           />
 
-          {/* Protected Routes with Layout */}
+          {/* STEP 6: Protected Routes */}
+          
+          {/* Dashboard Page */}
           <Route
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <DashboardPage />
+                <AuthenticatedLayout>
+                  <DashboardPage />
+                </AuthenticatedLayout>
               </ProtectedRoute>
             }
           />
+          
+          {/* All Tasks Page */}
           <Route
             path="/tasks"
             element={
@@ -92,6 +111,8 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          
+          {/* Calendar Page */}
           <Route
             path="/calendar"
             element={
@@ -102,6 +123,8 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          
+          {/* Favorites Page */}
           <Route
             path="/favorites"
             element={
@@ -112,6 +135,8 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          
+          {/* Settings Page */}
           <Route
             path="/settings"
             element={
@@ -123,10 +148,12 @@ const App = () => {
             }
           />
 
-          {/* Default Route - Redirect to dashboard or login */}
+          {/* STEP 7: Default Route */}
+          
+          {/* Redirect root to dashboard or login */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-          {/* 404 Not Found */}
+          {/* STEP 8: 404 Not Found Page */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </HashRouter>

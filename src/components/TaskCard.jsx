@@ -1,5 +1,6 @@
 // Task Card Component
-// Displays individual task with drag-and-drop support and status change options
+// Displays a single task with editing and deletion features
+// SIMPLIFIED VERSION - clearer and easier to understand
 
 import React, { useState } from 'react';
 import { Draggable } from '@hello-pangea/dnd';
@@ -21,24 +22,25 @@ import {
 } from 'lucide-react';
 
 const TaskCard = ({ task, index, sectionId }) => {
-  // Local state for editing and menu
+  // STEP 1: Local state for UI
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(task.title);
   const [editDescription, setEditDescription] = useState(task.description);
   const [showMoveMenu, setShowMoveMenu] = useState(false);
 
-  // Get dispatch function and sections from store
+  // STEP 2: Get functions from Redux
   const dispatch = useDispatch();
   const { sections, tasks } = useSelector((state) => state.kanban);
 
-  // Handle delete task
+  // STEP 3: Delete task function
   const handleDelete = () => {
+    // Send delete request to Redux
     dispatch(deleteTaskRequest({ sectionId, taskId: task.id }));
     setIsMenuOpen(false);
   };
 
-  // Handle edit start
+  // STEP 4: Start editing
   const handleEditStart = () => {
     setEditTitle(task.title);
     setEditDescription(task.description);
@@ -46,9 +48,10 @@ const TaskCard = ({ task, index, sectionId }) => {
     setIsMenuOpen(false);
   };
 
-  // Handle edit save
+  // STEP 5: Save edited task
   const handleEditSave = () => {
     if (editTitle.trim()) {
+      // Send update to Redux
       dispatch(updateTaskRequest({
         sectionId,
         taskId: task.id,
@@ -61,14 +64,14 @@ const TaskCard = ({ task, index, sectionId }) => {
     }
   };
 
-  // Handle edit cancel
+  // STEP 6: Cancel editing
   const handleEditCancel = () => {
     setIsEditing(false);
     setEditTitle(task.title);
     setEditDescription(task.description);
   };
 
-  // Handle toggle favorite
+  // STEP 7: Toggle favorite
   const handleToggleFavorite = () => {
     dispatch(updateTaskRequest({
       sectionId,
@@ -80,13 +83,16 @@ const TaskCard = ({ task, index, sectionId }) => {
     setIsMenuOpen(false);
   };
 
-  // Handle move to different section
+  // STEP 8: Move task to different section
   const handleMoveToSection = (targetSectionId) => {
+    // Don't move to same section
     if (targetSectionId === sectionId) return;
     
+    // Find task position in current section
     const sourceIndex = tasks[sectionId].findIndex(t => t.id === task.id);
     const destIndex = tasks[targetSectionId]?.length || 0;
     
+    // Send move request to Redux
     dispatch(moveTaskRequest({
       sourceSectionId: sectionId,
       destSectionId: targetSectionId,

@@ -1,103 +1,113 @@
 // Kanban Slice - Manages Kanban board state using Redux Toolkit
-// Handles sections, tasks, and their ordering
+// This file handles all the state changes for the Kanban board
 
 import { createSlice } from '@reduxjs/toolkit';
 
-// Helper function to generate unique IDs
-const generateId = () => {
-  return Date.now().toString(36) + Math.random().toString(36).substr(2);
-};
+// STEP 1: Helper function to create unique ID
+function generateId() {
+  return Date.now() + Math.random();
+}
 
-// Helper function to get kanban data from localStorage
-const getStoredKanbanData = () => {
+// STEP 2: Load saved data from browser storage
+function getStoredKanbanData() {
   try {
     const data = localStorage.getItem('taskflow_kanban');
     if (data) {
-      return JSON.parse(data);
+      return JSON.parse(data); // Convert string back to object
     }
   } catch (error) {
-    console.error('Error reading kanban data from localStorage:', error);
+    console.error('Error reading from storage:', error);
   }
-  return null;
-};
+  return null; // Return null if no data found
+}
 
-// Default sections when no data exists
+// STEP 3: Default sections - these show when app starts
 const defaultSections = [
   { id: 'section-1', title: 'To Do', order: 0 },
   { id: 'section-2', title: 'In Progress', order: 1 },
   { id: 'section-3', title: 'Done', order: 2 },
 ];
 
-// Get stored data or use defaults
+// STEP 4: Get stored data or use default
 const storedData = getStoredKanbanData();
 
-// Initial state for kanban board
+// STEP 5: Initial state - the starting data structure
 const initialState = {
-  // Array of section objects
-  sections: storedData?.sections || defaultSections,
-  // Object containing tasks keyed by section ID
-  tasks: storedData?.tasks || {
+  sections: storedData ? storedData.sections : defaultSections,
+  tasks: storedData ? storedData.tasks : {
     'section-1': [],
     'section-2': [],
     'section-3': [],
   },
-  // Loading state for API simulation
   isLoading: false,
-  // Saving state for persistence
   isSaving: false,
-  // Error message
   error: null,
-  // Search query for filtering tasks
   searchQuery: '',
 };
 
-// Create the kanban slice
+// STEP 6: Create the Redux slice - this manages all state changes
 const kanbanSlice = createSlice({
   name: 'kanban',
   initialState,
   reducers: {
-    // === LOADING ACTIONS ===
+    // ========== LOAD ACTIONS ==========
+    
+    // Show loading state
     loadKanbanRequest: (state) => {
       state.isLoading = true;
       state.error = null;
     },
+    
+    // Save loaded data
     loadKanbanSuccess: (state, action) => {
       state.isLoading = false;
       state.sections = action.payload.sections;
       state.tasks = action.payload.tasks;
     },
+    
+    // Show error if load fails
     loadKanbanFailure: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     },
 
-    // === SECTION ACTIONS ===
+    // ========== SECTION ACTIONS ==========
+    
+    // Start adding section
     addSectionRequest: (state) => {
       state.isSaving = true;
     },
+    
+    // Add new section to state
     addSectionSuccess: (state, action) => {
       state.isSaving = false;
       const newSection = action.payload;
       state.sections.push(newSection);
-      // Initialize empty task array for new section
       state.tasks[newSection.id] = [];
     },
     
+    // Start updating section
     updateSectionRequest: (state) => {
       state.isSaving = true;
     },
+    
+    // Update section title
     updateSectionSuccess: (state, action) => {
       state.isSaving = false;
       const { id, title } = action.payload;
+      // Find and update section
       const section = state.sections.find((s) => s.id === id);
       if (section) {
         section.title = title;
       }
     },
 
+    // Start deleting section
     deleteSectionRequest: (state) => {
       state.isSaving = true;
     },
+    
+    // Remove section from state
     deleteSectionSuccess: (state, action) => {
       state.isSaving = false;
       const sectionId = action.payload;
@@ -105,18 +115,25 @@ const kanbanSlice = createSlice({
       delete state.tasks[sectionId];
     },
 
+    // Start reordering sections
     reorderSectionsRequest: (state) => {
       state.isSaving = true;
     },
+    
+    // Update section order
     reorderSectionsSuccess: (state, action) => {
       state.isSaving = false;
       state.sections = action.payload;
     },
 
-    // === TASK ACTIONS ===
+    // ========== TASK ACTIONS ==========
+    
+    // Start adding task
     addTaskRequest: (state) => {
       state.isSaving = true;
     },
+    
+    // Add new task to section
     addTaskSuccess: (state, action) => {
       state.isSaving = false;
       const { sectionId, task } = action.payload;
@@ -126,9 +143,12 @@ const kanbanSlice = createSlice({
       state.tasks[sectionId].push(task);
     },
 
+    // Start updating task
     updateTaskRequest: (state) => {
       state.isSaving = true;
     },
+    
+    // Update task details
     updateTaskSuccess: (state, action) => {
       state.isSaving = false;
       const { sectionId, taskId, updates } = action.payload;
@@ -136,6 +156,7 @@ const kanbanSlice = createSlice({
       if (tasks) {
         const taskIndex = tasks.findIndex((t) => t.id === taskId);
         if (taskIndex !== -1) {
+          // Merge updates into existing task
           state.tasks[sectionId][taskIndex] = {
             ...state.tasks[sectionId][taskIndex],
             ...updates,
@@ -144,9 +165,12 @@ const kanbanSlice = createSlice({
       }
     },
 
+    // Start deleting task
     deleteTaskRequest: (state) => {
       state.isSaving = true;
     },
+    
+    // Remove task from section
     deleteTaskSuccess: (state, action) => {
       state.isSaving = false;
       const { sectionId, taskId } = action.payload;
@@ -157,20 +181,23 @@ const kanbanSlice = createSlice({
       }
     },
 
+    // Start moving task
     moveTaskRequest: (state) => {
       state.isSaving = true;
     },
+    
+    // Move task to different section
     moveTaskSuccess: (state, action) => {
       state.isSaving = false;
       const { sourceSectionId, destSectionId, sourceIndex, destIndex } = action.payload;
       
-      // Get the task being moved
+      // Get task from source
       const task = state.tasks[sourceSectionId][sourceIndex];
       
-      // Remove from source
+      // Remove from source section
       state.tasks[sourceSectionId].splice(sourceIndex, 1);
       
-      // Add to destination
+      // Add to destination section
       if (!state.tasks[destSectionId]) {
         state.tasks[destSectionId] = [];
       }
@@ -180,31 +207,37 @@ const kanbanSlice = createSlice({
       });
     },
 
+    // Start reordering tasks
     reorderTasksRequest: (state) => {
       state.isSaving = true;
     },
+    
+    // Update task order in section
     reorderTasksSuccess: (state, action) => {
       state.isSaving = false;
       const { sectionId, tasks } = action.payload;
       state.tasks[sectionId] = tasks;
     },
 
-    // Generic save completion
+    // Task saved successfully
     saveComplete: (state) => {
       state.isSaving = false;
     },
+    
+    // Task save failed
     saveError: (state, action) => {
       state.isSaving = false;
       state.error = action.payload;
     },
-    // Set search query
+    
+    // Update search query for filtering
     setSearchQuery: (state, action) => {
       state.searchQuery = action.payload;
     },
   },
 });
 
-// Export all actions
+// STEP 7: Export all actions - these functions trigger state changes
 export const {
   loadKanbanRequest,
   loadKanbanSuccess,
@@ -232,5 +265,5 @@ export const {
   setSearchQuery,
 } = kanbanSlice.actions;
 
-// Export reducer
+// STEP 8: Export reducer - connects to Redux store
 export default kanbanSlice.reducer;

@@ -1,5 +1,6 @@
 // Add Task Form Component
 // Form for adding new tasks to a section
+// SIMPLIFIED VERSION - with clear step-by-step comments
 
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -7,33 +8,36 @@ import { addTaskRequest } from '../store/slices/kanbanSlice';
 import { Plus, X } from 'lucide-react';
 
 const AddTaskForm = ({ sectionId, onClose }) => {
-  // Local state for form inputs
+  // STEP 1: Local state for form inputs
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
-  // Get dispatch function
+  // STEP 2: Get dispatch function
   const dispatch = useDispatch();
 
-  // Handle form submission
+  // STEP 3: Handle form submission
   const handleSubmit = (event) => {
     event.preventDefault();
     
+    // Check if title is not empty
     if (title.trim()) {
-      // Dispatch add task action
+      // Send add task action to Redux
       dispatch(addTaskRequest({
         sectionId,
         title: title.trim(),
         description: description.trim(),
       }));
       
-      // Clear form and close
+      // Clear form
       setTitle('');
       setDescription('');
+      
+      // Close form
       onClose();
     }
   };
 
-  // Handle cancel
+  // STEP 4: Handle cancel button
   const handleCancel = () => {
     setTitle('');
     setDescription('');
@@ -42,7 +46,7 @@ const AddTaskForm = ({ sectionId, onClose }) => {
 
   return (
     <form onSubmit={handleSubmit} className="bg-kanban-task rounded-lg border border-border p-3 mb-2 animate-slide-up">
-      {/* Title Input */}
+      {/* STEP 5: Title Input */}
       <input
         type="text"
         value={title}
@@ -52,7 +56,7 @@ const AddTaskForm = ({ sectionId, onClose }) => {
         autoFocus
       />
 
-      {/* Description Input */}
+      {/* STEP 6: Description Input */}
       <textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
@@ -61,8 +65,9 @@ const AddTaskForm = ({ sectionId, onClose }) => {
         rows={2}
       />
 
-      {/* Action Buttons */}
+      {/* STEP 7: Action Buttons */}
       <div className="flex items-center gap-2 mt-3">
+        {/* Submit button - disabled if title is empty */}
         <button
           type="submit"
           disabled={!title.trim()}
@@ -71,6 +76,8 @@ const AddTaskForm = ({ sectionId, onClose }) => {
           <Plus className="w-4 h-4" />
           Add Task
         </button>
+        
+        {/* Cancel button */}
         <button
           type="button"
           onClick={handleCancel}

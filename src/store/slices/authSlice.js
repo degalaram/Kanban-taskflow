@@ -1,86 +1,89 @@
-// Auth Slice - Manages authentication state using Redux Toolkit
-// This is a basic example of creating a slice with reducers
+// Auth Slice - Manages user login and authentication state
+// This file handles all authentication-related state changes
 
 import { createSlice } from '@reduxjs/toolkit';
 
-// Helper function to get session from localStorage
-const getStoredSession = () => {
+// STEP 1: Helper function to get saved session from storage
+function getStoredSession() {
   try {
     const session = localStorage.getItem('taskflow_session');
     if (session) {
-      return JSON.parse(session);
+      return JSON.parse(session); // Convert string to object
     }
   } catch (error) {
-    console.error('Error reading session from localStorage:', error);
+    console.error('Error reading session:', error);
   }
   return null;
-};
+}
 
-// Helper function to get user from localStorage
-const getStoredUser = () => {
+// STEP 2: Helper function to get saved user from storage
+function getStoredUser() {
   try {
     const user = localStorage.getItem('taskflow_user');
     if (user) {
-      return JSON.parse(user);
+      return JSON.parse(user); // Convert string to object
     }
   } catch (error) {
-    console.error('Error reading user from localStorage:', error);
+    console.error('Error reading user:', error);
   }
   return null;
-};
+}
 
-// Initial state for authentication
+// STEP 3: Initial state - starting data structure
 const initialState = {
-  // User information
-  user: getStoredUser(),
-  // Session tokens
-  session: getStoredSession(),
-  // Loading states
-  isLoading: false,
-  isRefreshing: false,
-  // Error message
-  error: null,
-  // Whether user is authenticated
-  isAuthenticated: !!getStoredSession(),
+  user: getStoredUser(), // Logged in user info
+  session: getStoredSession(), // Login tokens
+  isLoading: false, // Show loading spinner during login
+  isRefreshing: false, // Refreshing token state
+  error: null, // Error message if login fails
+  isAuthenticated: !!getStoredSession(), // Is user logged in?
 };
 
-// Create the auth slice using createSlice from Redux Toolkit
-// createSlice automatically generates action creators and action types
+// STEP 4: Create auth reducer - handles all login state changes
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    // Action to start login process
+    // ========== LOGIN ACTIONS ==========
+    
+    // Show loading when starting login
     loginRequest: (state, action) => {
       state.isLoading = true;
       state.error = null;
     },
-    // Action when login succeeds
+    
+    // Login successful - save user info
     loginSuccess: (state, action) => {
       state.isLoading = false;
       state.user = action.payload.user;
       state.session = action.payload.session;
       state.isAuthenticated = true;
       state.error = null;
-      // Save user to localStorage
+      // Save to browser storage
       localStorage.setItem('taskflow_user', JSON.stringify(action.payload.user));
     },
-    // Action when login fails
+    
+    // Login failed - show error
     loginFailure: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
       state.isAuthenticated = false;
     },
-    // Action to start token refresh
+    
+    // ========== TOKEN REFRESH ACTIONS ==========
+    
+    // Start refreshing token
     refreshTokenRequest: (state) => {
       state.isRefreshing = true;
     },
-    // Action when token refresh succeeds
+    
+    // Token refresh successful
     refreshTokenSuccess: (state, action) => {
       state.isRefreshing = false;
       state.session = action.payload;
     },
-    // Action when token refresh fails
+    
+    // Token refresh failed - logout user
     refreshTokenFailure: (state) => {
       state.isRefreshing = false;
       state.user = null;
@@ -88,7 +91,10 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       localStorage.removeItem('taskflow_user');
     },
-    // Action to update profile
+    
+    // ========== PROFILE ACTIONS ==========
+    
+    // Update user profile information
     updateProfile: (state, action) => {
       const { username, email } = action.payload;
       state.user = {
@@ -96,26 +102,33 @@ const authSlice = createSlice({
         username,
         email,
       };
-      // Save updated user to localStorage
+      // Save updated user to storage
       localStorage.setItem('taskflow_user', JSON.stringify(state.user));
     },
-    // Action to logout user
+    
+    // ========== LOGOUT ACTION ==========
+    
+    // Logout - clear all data
     logout: (state) => {
       state.user = null;
       state.session = null;
       state.isAuthenticated = false;
       state.error = null;
+      // Clear from browser storage
       localStorage.removeItem('taskflow_user');
       localStorage.removeItem('taskflow_session');
     },
-    // Action to clear any errors
+    
+    // ========== ERROR HANDLING ==========
+    
+    // Clear any error messages
     clearError: (state) => {
       state.error = null;
     },
   },
 });
 
-// Export actions - these are the functions we call to dispatch actions
+// STEP 5: Export action functions
 export const {
   loginRequest,
   loginSuccess,
@@ -128,5 +141,5 @@ export const {
   clearError,
 } = authSlice.actions;
 
-// Export reducer - this is connected to the store
+// STEP 6: Export reducer - connects to Redux store
 export default authSlice.reducer;

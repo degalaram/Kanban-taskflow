@@ -1,5 +1,6 @@
 // Kanban Section Component
-// A column in the Kanban board containing tasks
+// A single column in the Kanban board
+// SIMPLIFIED VERSION - clearer comments and structure
 
 import React, { useState } from 'react';
 import { Droppable, Draggable } from '@hello-pangea/dnd';
@@ -21,16 +22,16 @@ import {
 } from 'lucide-react';
 
 const KanbanSection = ({ section, tasks, allTasks, index, isFiltering }) => {
-  // Local state
+  // STEP 1: Local state
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(section.title);
 
-  // Get dispatch function
+  // STEP 2: Get dispatch function
   const dispatch = useDispatch();
 
-  // Get section color based on title
+  // STEP 3: Get section color based on title
   const getSectionColor = () => {
     const title = section.title.toLowerCase();
     if (title.includes('done') || title.includes('complete')) {
@@ -49,7 +50,7 @@ const KanbanSection = ({ section, tasks, allTasks, index, isFiltering }) => {
     done: 'bg-done',
   };
 
-  // Handle delete section
+  // STEP 4: Delete section
   const handleDelete = () => {
     if (window.confirm('Are you sure you want to delete this section and all its tasks?')) {
       dispatch(deleteSectionRequest(section.id));
@@ -57,14 +58,14 @@ const KanbanSection = ({ section, tasks, allTasks, index, isFiltering }) => {
     setIsMenuOpen(false);
   };
 
-  // Handle edit start
+  // STEP 5: Start editing section title
   const handleEditStart = () => {
     setEditTitle(section.title);
     setIsEditing(true);
     setIsMenuOpen(false);
   };
 
-  // Handle edit save
+  // STEP 6: Save edited section title
   const handleEditSave = () => {
     if (editTitle.trim()) {
       dispatch(updateSectionRequest({
@@ -75,13 +76,13 @@ const KanbanSection = ({ section, tasks, allTasks, index, isFiltering }) => {
     }
   };
 
-  // Handle edit cancel
+  // STEP 7: Cancel editing
   const handleEditCancel = () => {
     setIsEditing(false);
     setEditTitle(section.title);
   };
 
-  // Handle key press in edit input
+  // STEP 8: Handle key press in edit mode
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleEditSave();

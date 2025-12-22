@@ -1,5 +1,6 @@
 // Kanban Board Component
 // Main board with drag-and-drop support for sections and tasks
+// SIMPLIFIED VERSION - with clear step-by-step comments
 
 import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
@@ -15,22 +16,26 @@ import KanbanSection from './KanbanSection';
 import { Plus, X, Loader2 } from 'lucide-react';
 
 const KanbanBoard = () => {
-  // Local state for adding new section
+  // STEP 1: State for adding new section
   const [isAddingSection, setIsAddingSection] = useState(false);
   const [newSectionTitle, setNewSectionTitle] = useState('');
 
-  // Get dispatch function
+  // STEP 2: Get dispatch function
   const dispatch = useDispatch();
 
-  // Get kanban state from Redux store
+  // STEP 3: Get data from Redux store
   const { sections, tasks, isLoading, searchQuery } = useSelector((state) => state.kanban);
 
-  // Filter tasks based on search query
+  // STEP 4: Filter tasks based on search query
   const getFilteredTasks = (sectionId) => {
     const sectionTasks = tasks[sectionId] || [];
+    
+    // If no search query, return all tasks
     if (!searchQuery.trim()) {
       return sectionTasks;
     }
+    
+    // Filter tasks that match search query
     const query = searchQuery.toLowerCase();
     return sectionTasks.filter(
       (task) =>
@@ -39,22 +44,21 @@ const KanbanBoard = () => {
     );
   };
 
-  // Load kanban data on mount
+  // STEP 5: Load kanban data when component loads
   useEffect(() => {
     dispatch(loadKanbanRequest());
   }, [dispatch]);
 
-  // Handle drag end event
-  // This is the main function that handles all drag-and-drop operations
+  // STEP 6: Handle drag and drop operations
   const handleDragEnd = (result) => {
     const { destination, source, type } = result;
 
-    // If dropped outside a droppable area, do nothing
+    // Do nothing if dropped outside
     if (!destination) {
       return;
     }
 
-    // If dropped in the same position, do nothing
+    // Do nothing if dropped in same place
     if (
       destination.droppableId === source.droppableId &&
       destination.index === source.index
@@ -62,39 +66,51 @@ const KanbanBoard = () => {
       return;
     }
 
-    // Handle section reordering
+    // Handle reordering sections
     if (type === 'section') {
+      // Make a copy of sections array
       const newSections = Array.from(sections);
+      
+      // Remove section from old position
       const [movedSection] = newSections.splice(source.index, 1);
+      
+      // Add section to new position
       newSections.splice(destination.index, 0, movedSection);
 
-      // Update order property
+      // Update order numbers
       const updatedSections = newSections.map((section, index) => ({
         ...section,
         order: index,
       }));
 
+      // Send update to Redux
       dispatch(reorderSectionsRequest(updatedSections));
       return;
     }
 
-    // Handle task reordering/moving
+    // Handle tasks
     if (type === 'task') {
       const sourceSectionId = source.droppableId;
       const destSectionId = destination.droppableId;
 
-      // If moving within the same section
+      // Moving task within same section
       if (sourceSectionId === destSectionId) {
+        // Make a copy of tasks in section
         const sectionTasks = Array.from(tasks[sourceSectionId] || []);
+        
+        // Remove task from old position
         const [movedTask] = sectionTasks.splice(source.index, 1);
+        
+        // Add task to new position
         sectionTasks.splice(destination.index, 0, movedTask);
 
+        // Send update to Redux
         dispatch(reorderTasksRequest({
           sectionId: sourceSectionId,
           tasks: sectionTasks,
         }));
       } else {
-        // Moving to a different section
+        // Moving task to different section
         dispatch(moveTaskRequest({
           sourceSectionId,
           destSectionId,
@@ -105,23 +121,27 @@ const KanbanBoard = () => {
     }
   };
 
-  // Handle add section form submission
+  // STEP 7: Handle adding new section
   const handleAddSection = (e) => {
     e.preventDefault();
+    
     if (newSectionTitle.trim()) {
+      // Send add section request to Redux
       dispatch(addSectionRequest({ title: newSectionTitle.trim() }));
+      
+      // Clear form
       setNewSectionTitle('');
       setIsAddingSection(false);
     }
   };
 
-  // Handle cancel add section
+  // STEP 8: Handle cancel adding section
   const handleCancelAddSection = () => {
     setNewSectionTitle('');
     setIsAddingSection(false);
   };
 
-  // Loading state
+  // STEP 9: Show loading screen
   if (isLoading) {
     return (
       <div className="flex-1 flex items-center justify-center">
@@ -133,7 +153,7 @@ const KanbanBoard = () => {
     );
   }
 
-  // Count total filtered tasks
+  // STEP 10: Count tasks for display
   const totalFilteredTasks = sections.reduce(
     (acc, section) => acc + getFilteredTasks(section.id).length,
     0
@@ -145,7 +165,7 @@ const KanbanBoard = () => {
 
   return (
     <div className="flex-1 overflow-hidden">
-      {/* Board Header */}
+      {/* STEP 11: Board Header Section */}
       <div className="p-4 md:p-6 pb-2 md:pb-4">
         <h2 className="text-xl md:text-2xl font-bold text-foreground">Kanban Board</h2>
         <p className="text-sm md:text-base text-muted-foreground mt-1">
@@ -159,7 +179,7 @@ const KanbanBoard = () => {
         </p>
       </div>
 
-      {/* Board Content */}
+      {/* STEP 12: Drag Drop Context */}
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="board" type="section" direction="horizontal">
           {(provided) => (
@@ -168,7 +188,7 @@ const KanbanBoard = () => {
               {...provided.droppableProps}
               className="flex gap-3 md:gap-4 px-4 md:px-6 pb-6 overflow-x-auto custom-scrollbar h-[calc(100vh-11rem)] md:h-[calc(100vh-12rem)]"
             >
-              {/* Render Sections */}
+              {/* STEP 13: Render all sections */}
               {sections
                 .slice()
                 .sort((a, b) => a.order - b.order)
@@ -185,13 +205,15 @@ const KanbanBoard = () => {
 
               {provided.placeholder}
 
-              {/* Add Section Button/Form */}
+              {/* STEP 14: Add Section Button/Form */}
               <div className="flex-shrink-0 w-72 md:w-80">
                 {isAddingSection ? (
+                  // Form to add new section
                   <form
                     onSubmit={handleAddSection}
                     className="bg-kanban-section rounded-xl border border-border p-4 animate-fade-in"
                   >
+                    {/* Input for section title */}
                     <input
                       type="text"
                       value={newSectionTitle}
@@ -200,6 +222,7 @@ const KanbanBoard = () => {
                       className="w-full px-3 py-2 text-sm rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-muted-foreground"
                       autoFocus
                     />
+                    {/* Submit and Cancel buttons */}
                     <div className="flex items-center gap-2 mt-3">
                       <button
                         type="submit"
@@ -219,6 +242,7 @@ const KanbanBoard = () => {
                     </div>
                   </form>
                 ) : (
+                  // Button to show form
                   <button
                     onClick={() => setIsAddingSection(true)}
                     className="w-full h-12 flex items-center justify-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground bg-kanban-section/50 hover:bg-kanban-section rounded-xl border-2 border-dashed border-border hover:border-primary/50 transition-colors"
