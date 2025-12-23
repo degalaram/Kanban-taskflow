@@ -1,5 +1,3 @@
-// Kanban Board Component
-// Main board with drag-and-drop support for sections and tasks
 
 import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
@@ -25,12 +23,10 @@ const KanbanBoard = () => {
   const getFilteredTasks = (sectionId) => {
     const sectionTasks = tasks[sectionId] || [];
     
-    // If no search query, return all tasks
     if (!searchQuery.trim()) {
       return sectionTasks;
     }
     
-    // Filter tasks that match search query
     const query = searchQuery.toLowerCase();
     return sectionTasks.filter(
       (task) =>
@@ -46,12 +42,10 @@ const KanbanBoard = () => {
   const handleDragEnd = (result) => {
     const { destination, source, type } = result;
 
-    // Do nothing if dropped outside
     if (!destination) {
       return;
     }
 
-    // Do nothing if dropped in same place
     if (
       destination.droppableId === source.droppableId &&
       destination.index === source.index
@@ -59,51 +53,38 @@ const KanbanBoard = () => {
       return;
     }
 
-    // Handle reordering sections
     if (type === 'section') {
-      // Make a copy of sections array
       const newSections = Array.from(sections);
       
-      // Remove section from old position
       const [movedSection] = newSections.splice(source.index, 1);
       
-      // Add section to new position
       newSections.splice(destination.index, 0, movedSection);
 
-      // Update order numbers
       const updatedSections = newSections.map((section, index) => ({
         ...section,
         order: index,
       }));
 
-      // Send update to Redux
       dispatch(reorderSectionsRequest(updatedSections));
       return;
     }
 
-    // Handle tasks
     if (type === 'task') {
       const sourceSectionId = source.droppableId;
       const destSectionId = destination.droppableId;
 
-      // Moving task within same section
       if (sourceSectionId === destSectionId) {
-        // Make a copy of tasks in section
         const sectionTasks = Array.from(tasks[sourceSectionId] || []);
         
-        // Remove task from old position
         const [movedTask] = sectionTasks.splice(source.index, 1);
         
-        // Add task to new position
         sectionTasks.splice(destination.index, 0, movedTask);
 
-        // Send update to Redux
         dispatch(reorderTasksRequest({
           sectionId: sourceSectionId,
           tasks: sectionTasks,
         }));
       } else {
-        // Moving task to different section
         dispatch(moveTaskRequest({
           sourceSectionId,
           destSectionId,
@@ -118,10 +99,8 @@ const KanbanBoard = () => {
     e.preventDefault();
     
     if (newSectionTitle.trim()) {
-      // Send add section request to Redux
       dispatch(addSectionRequest({ title: newSectionTitle.trim() }));
       
-      // Clear form
       setNewSectionTitle('');
       setIsAddingSection(false);
     }
@@ -197,7 +176,6 @@ const KanbanBoard = () => {
               {/* Add Section Button/Form */}
               <div className="flex-shrink-0 w-72 sm:w-80 md:w-96">
                 {isAddingSection ? (
-                  // Form to add new section
                   <form
                     onSubmit={handleAddSection}
                     className="bg-kanban-section rounded-xl border border-border p-4 animate-fade-in"
@@ -231,7 +209,6 @@ const KanbanBoard = () => {
                     </div>
                   </form>
                 ) : (
-                  // Button to show form
                   <button
                     onClick={() => setIsAddingSection(true)}
                     className="w-full h-12 flex items-center justify-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground bg-kanban-section/50 hover:bg-kanban-section rounded-xl border-2 border-dashed border-border hover:border-primary/50 transition-colors"

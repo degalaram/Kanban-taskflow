@@ -1,4 +1,3 @@
-// Auth slice (simplified)
 import { createSlice } from '@reduxjs/toolkit';
 
 function loadUser() {

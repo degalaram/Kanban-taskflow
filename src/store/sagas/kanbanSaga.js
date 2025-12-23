@@ -66,7 +66,6 @@ function* handleAddSection(action) {
     const { title } = action.payload;
     const newSection = { id: 'section-' + generateId(), title, order: Date.now() };
     yield put(addSectionSuccess(newSection));
-    // Save updated state to localStorage
     const state = yield select((s) => s.kanban);
     saveToLocalStorage(state.sections, state.tasks);
   } catch (err) { yield put(saveError(err.message)); }

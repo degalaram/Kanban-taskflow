@@ -1,5 +1,3 @@
-// Calendar Page Component
-// Shows a calendar with task indicators for days with tasks
 
 import React, { useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -9,7 +7,6 @@ const CalendarPage = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const { sections, tasks } = useSelector((state) => state.kanban);
 
-  // Get all tasks with dates
   const allTasks = useMemo(() => {
     const tasksList = [];
     sections.forEach((section) => {
@@ -25,7 +22,6 @@ const CalendarPage = () => {
     return tasksList;
   }, [sections, tasks]);
 
-  // Group tasks by date
   const tasksByDate = useMemo(() => {
     const grouped = {};
     allTasks.forEach((task) => {
@@ -36,7 +32,6 @@ const CalendarPage = () => {
     return grouped;
   }, [allTasks]);
 
-  // Get month and year
   const currentMonth = currentDate.getMonth();
   const currentYear = currentDate.getFullYear();
 

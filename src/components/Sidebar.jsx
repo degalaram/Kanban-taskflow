@@ -1,5 +1,3 @@
-// Sidebar Component
-// Navigation sidebar with menu items and routing - Responsive design
 
 import React, { useMemo, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
@@ -17,34 +15,23 @@ import {
 } from 'lucide-react';
 
 const Sidebar = ({ isMobileMenuOpen, onMobileMenuClose }) => {
-  // Get kanban state from Redux store
   const { sections, tasks } = useSelector((state) => state.kanban);
   
-  // Get navigation and location
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Close mobile menu on route change
   useEffect(() => {
-    // Only close when the route actually changes. Don't depend on the
-    // `onMobileMenuClose` prop (it's recreated each render by the parent),
-    // otherwise this effect runs on every render and immediately hides the
-    // drawer after it opens.
     onMobileMenuClose();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
-  // Calculate task statistics
   const stats = useMemo(() => {
     let total = 0;
     let completed = 0;
     let inProgress = 0;
 
-    // Count tasks across all sections
     Object.entries(tasks).forEach(([sectionId, sectionTasks]) => {
       total += sectionTasks.length;
       
-      // Find section to determine type
       const section = sections.find((s) => s.id === sectionId);
       if (section) {
         const title = section.title.toLowerCase();
@@ -59,7 +46,6 @@ const Sidebar = ({ isMobileMenuOpen, onMobileMenuClose }) => {
     return { total, completed, inProgress };
   }, [sections, tasks]);
 
-  // Menu items array with routes
   const menuItems = [
     { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
     { id: 'tasks', icon: CheckSquare, label: 'All Tasks', path: '/tasks' },
@@ -72,13 +58,11 @@ const Sidebar = ({ isMobileMenuOpen, onMobileMenuClose }) => {
     { id: 'help', icon: HelpCircle, label: 'Help & Support', path: '/help' },
   ];
 
-  // Handle menu item click
   const handleMenuClick = (path) => {
     navigate(path);
     onMobileMenuClose();
   };
 
-  // Check if menu item is active
   const isActive = (path) => {
     return location.pathname === path;
   };
@@ -162,7 +146,6 @@ const Sidebar = ({ isMobileMenuOpen, onMobileMenuClose }) => {
   );
 };
 
-// Menu Item Component
 const MenuItem = ({ item, active, onClick }) => {
   const Icon = item.icon;
 
@@ -184,7 +167,6 @@ const MenuItem = ({ item, active, onClick }) => {
   );
 };
 
-// Stat Item Component
 const StatItem = ({ label, value, color }) => {
   const colorClasses = {
     primary: 'bg-sidebar-primary',

@@ -1,13 +1,9 @@
-// Badge component - small label for status or categories
-// Uses class-variance-authority for variants
 
 import * as React from "react";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-// Define badge variants
 const badgeVariants = cva(
-  // Base styles
   "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
     variants: {
@@ -24,7 +20,6 @@ const badgeVariants = cva(
   }
 );
 
-// Badge component
 function Badge(props) {
   const { className, variant, ...rest } = props;
   return (

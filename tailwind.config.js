@@ -1,12 +1,8 @@
-// Tailwind CSS configuration file
-// Defines the design system: colors, fonts, animations, etc.
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  // Enable dark mode with class strategy
   darkMode: ["class"],
   
-  // Files to scan for Tailwind classes
   content: [
     "./pages/**/*.{js,jsx}",
     "./components/**/*.{js,jsx}",
@@ -14,11 +10,9 @@ export default {
     "./src/**/*.{js,jsx}",
   ],
   
-  // No prefix for utility classes
   prefix: "",
   
   theme: {
-    // Container settings
     container: {
       center: true,
       padding: "2rem",
@@ -28,13 +22,10 @@ export default {
     },
     
     extend: {
-      // Custom font family
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       
-      // Custom colors using CSS variables from index.css
-      // All colors use HSL format for consistency
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -42,49 +33,41 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         
-        // Primary color with foreground variant
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
         },
         
-        // Secondary color
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
         },
         
-        // Destructive/danger color
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
         
-        // Muted color for less emphasis
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
         },
         
-        // Accent color for highlights
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
         
-        // Popover background
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
         
-        // Card background
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
         
-        // Sidebar specific colors
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -96,7 +79,6 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
         
-        // TaskFlow custom colors for Kanban sections
         todo: "hsl(var(--todo))",
         "todo-light": "hsl(var(--todo-light))",
         inprogress: "hsl(var(--inprogress))",
@@ -104,7 +86,6 @@ export default {
         done: "hsl(var(--done))",
         "done-light": "hsl(var(--done-light))",
         
-        // Kanban board colors
         kanban: {
           bg: "hsl(var(--kanban-bg))",
           section: "hsl(var(--section-bg))",
@@ -113,14 +94,12 @@ export default {
         },
       },
       
-      // Border radius using CSS variable
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
       
-      // Custom keyframe animations
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -135,7 +114,6 @@ export default {
         },
       },
       
-      // Animation utilities
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
@@ -144,6 +122,5 @@ export default {
     },
   },
   
-  // Plugins
   plugins: [require("tailwindcss-animate")],
 };

@@ -1,12 +1,9 @@
-// Header Component
-// Top navigation bar with search, theme toggle, and user menu
-// SIMPLIFIED VERSION - clearer step-by-step comments
 
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../store/slices/authSlice';
 import { setSearchQuery } from '../store/slices/kanbanSlice';
-import { LogOut, User, Zap, RefreshCw, Search, Sun, Moon, X, Menu } from 'lucide-react';
+import { LogOut, User, Code2, RefreshCw, Search, Sun, Moon, X, Menu } from 'lucide-react';
 
 const Header = ({ onMenuToggle, isMobileMenuOpen }) => {
   const dispatch = useDispatch();
@@ -91,7 +88,7 @@ const Header = ({ onMenuToggle, isMobileMenuOpen }) => {
         </button>
         
         <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-          <Zap className="w-5 h-5 text-primary-foreground" />
+           <Code2 className="w-5 h-5 text-primary-foreground" />
         </div>
         <div className="hidden sm:block">
           <h1 className="text-lg font-bold text-foreground">TaskFlow</h1>

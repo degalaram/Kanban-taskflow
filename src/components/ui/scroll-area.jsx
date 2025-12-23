@@ -1,11 +1,8 @@
-// ScrollArea component - custom scrollable area
-// Uses Radix UI ScrollArea primitive
 
 import * as React from "react";
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 import { cn } from "@/lib/utils";
 
-// Main ScrollArea component
 const ScrollArea = React.forwardRef(function ScrollArea(props, ref) {
   const { className, children, ...rest } = props;
   
@@ -25,7 +22,6 @@ const ScrollArea = React.forwardRef(function ScrollArea(props, ref) {
 });
 ScrollArea.displayName = ScrollAreaPrimitive.Root.displayName;
 
-// Scrollbar component
 const ScrollBar = React.forwardRef(function ScrollBar(props, ref) {
   const { className, orientation = "vertical", ...rest } = props;
   

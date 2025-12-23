@@ -1,5 +1,3 @@
-// Login Page Component
-// Split-screen design with Sign In / Sign Up toggle
 
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,10 +6,8 @@ import { loginRequest, clearError } from '../store/slices/authSlice';
 import { Loader2, Lock, User, Mail, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
 const LoginPage = () => {
-  // Mode: 'signin' or 'signup'
   const [mode, setMode] = useState('signin');
   
-  // Form fields
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,14 +17,12 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { isLoading, error, isAuthenticated } = useSelector((state) => state.auth);
 
-  // Navigate to dashboard when authenticated
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/dashboard');
     }
   }, [isAuthenticated, navigate]);
 
-  // Clear error when component unmounts or mode changes
   useEffect(() => {
     dispatch(clearError());
   }, [mode, dispatch]);
@@ -39,17 +33,13 @@ const LoginPage = () => {
     };
   }, [dispatch]);
 
-  // Handle form submission
   const handleSubmit = (event) => {
     event.preventDefault();
-    // For both modes, we use username and password for simulated auth
     dispatch(loginRequest({ username, password }));
   };
 
-  // Toggle between sign in and sign up
   const toggleMode = () => {
     setMode(mode === 'signin' ? 'signup' : 'signin');
-    // Reset form
     setUsername('');
     setEmail('');
     setPassword('');
@@ -285,7 +275,6 @@ const LoginPage = () => {
   );
 };
 
-// Feature Row Component
 const FeatureRow = ({ text }) => (
   <div className="flex items-center gap-3">
     <div className="w-2 h-2 rounded-full bg-[hsl(var(--inprogress))]" />

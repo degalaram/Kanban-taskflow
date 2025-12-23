@@ -1,6 +1,3 @@
-// Kanban Section Component
-// A single column in the Kanban board
-// SIMPLIFIED VERSION - clearer comments and structure
 
 import React, { useState } from 'react';
 import { Droppable, Draggable } from '@hello-pangea/dnd';

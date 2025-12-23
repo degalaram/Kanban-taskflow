@@ -1,6 +1,3 @@
-// App Component - Main application file
-// Handles routing and authentication
-// SIMPLIFIED VERSION - with clear step-by-step comments
 
 import React from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
@@ -18,31 +15,23 @@ import NotFound from './pages/NotFound';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 
-// Protected Route Component
-// Redirects to login if user is not authenticated
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useSelector((state) => state.auth);
   
-  // If not logged in, go to login page
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
   
-  // If logged in, show the page
   return children;
 };
 
-// Public Route Component
-// Redirects to dashboard if user is already authenticated
 const PublicRoute = ({ children }) => {
   const { isAuthenticated } = useSelector((state) => state.auth);
   
-  // If already logged in, go to dashboard
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
   
-  // If not logged in, show the page
   return children;
 };
 

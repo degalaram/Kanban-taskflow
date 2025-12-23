@@ -1,6 +1,3 @@
-// Task Card Component
-// Displays a single task with editing and deletion features
-// SIMPLIFIED VERSION - clearer and easier to understand
 
 import React, { useState } from 'react';
 import { Draggable } from '@hello-pangea/dnd';
@@ -30,7 +27,6 @@ const TaskCard = ({ task, index, sectionId }) => {
   const dispatch = useDispatch();
   const { sections, tasks } = useSelector((state) => state.kanban);
   const handleDelete = () => {
-    // Send delete request to Redux
     dispatch(deleteTaskRequest({ sectionId, taskId: task.id }));
     setIsMenuOpen(false);
   };
@@ -44,7 +40,6 @@ const TaskCard = ({ task, index, sectionId }) => {
 
   const handleEditSave = () => {
     if (editTitle.trim()) {
-      // Send update to Redux
       dispatch(updateTaskRequest({
         sectionId,
         taskId: task.id,
@@ -75,14 +70,11 @@ const TaskCard = ({ task, index, sectionId }) => {
   };
 
   const handleMoveToSection = (targetSectionId) => {
-    // Don't move to same section
     if (targetSectionId === sectionId) return;
     
-    // Find task position in current section
     const sourceIndex = tasks[sectionId].findIndex(t => t.id === task.id);
     const destIndex = tasks[targetSectionId]?.length || 0;
     
-    // Send move request to Redux
     dispatch(moveTaskRequest({
       sourceSectionId: sectionId,
       destSectionId: targetSectionId,
@@ -94,7 +86,6 @@ const TaskCard = ({ task, index, sectionId }) => {
     setIsMenuOpen(false);
   };
 
-  // Get section icon based on title
   const getSectionIcon = (title) => {
     const lowerTitle = title.toLowerCase();
     if (lowerTitle.includes('done') || lowerTitle.includes('complete')) {
@@ -106,7 +97,6 @@ const TaskCard = ({ task, index, sectionId }) => {
     return <Circle className="w-4 h-4 text-muted-foreground" />;
   };
 
-  // Format date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { 
@@ -128,7 +118,6 @@ const TaskCard = ({ task, index, sectionId }) => {
           } ${isEditing ? 'ring-2 ring-primary' : ''}`}
         >
           {isEditing ? (
-            // Edit Mode
             <div className="space-y-3">
               <input
                 type="text"
@@ -161,7 +150,6 @@ const TaskCard = ({ task, index, sectionId }) => {
               </div>
             </div>
           ) : (
-            // View Mode
             <>
               <div className="flex items-start gap-2">
                 {/* Drag Handle */}
@@ -277,7 +265,6 @@ const TaskCard = ({ task, index, sectionId }) => {
   );
 };
 
-// ChevronRight for submenu indicator
 const ChevronRight = ({ className }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

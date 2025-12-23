@@ -1,5 +1,3 @@
-// Settings Page Component
-// Shows profile settings and account management
 
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -8,20 +6,16 @@ import { logout, updateProfile } from '../store/slices/authSlice';
 import { toast } from 'sonner';
 
 const SettingsPage = () => {
-  // Get auth state from Redux store
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  // Form state
   const [username, setUsername] = useState(user?.username || '');
   const [email, setEmail] = useState(user?.email || '');
   const [isSaving, setIsSaving] = useState(false);
 
-  // Handle save profile
   const handleSaveProfile = async (e) => {
     e.preventDefault();
     
-    // Validate inputs
     if (!username.trim()) {
       toast.error('Username is required');
       return;
@@ -33,17 +27,14 @@ const SettingsPage = () => {
 
     setIsSaving(true);
 
-    // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 500));
 
-    // Update profile in store
     dispatch(updateProfile({ username: username.trim(), email: email.trim() }));
 
     setIsSaving(false);
     toast.success('Profile updated successfully');
   };
 
-  // Handle logout
   const handleLogout = () => {
     dispatch(logout());
   };

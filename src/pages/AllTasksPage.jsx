@@ -1,5 +1,3 @@
-// All Tasks Page Component
-// Shows all tasks from all sections in a list view with status change options
 
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -7,15 +5,12 @@ import { CheckCircle, Clock, Circle, Star, MoreHorizontal, ArrowRight, Trash2, C
 import { updateTaskRequest, deleteTaskRequest, moveTaskRequest } from '../store/slices/kanbanSlice';
 
 const AllTasksPage = () => {
-  // Get kanban state from Redux store
   const { sections, tasks } = useSelector((state) => state.kanban);
   const dispatch = useDispatch();
 
-  // State for open menus
   const [openMenuId, setOpenMenuId] = useState(null);
   const [showMoveMenuId, setShowMoveMenuId] = useState(null);
 
-  // Get all tasks as a flat array with section info
   const allTasks = [];
   sections.forEach((section) => {
     const sectionTasks = tasks[section.id] || [];
@@ -29,10 +24,8 @@ const AllTasksPage = () => {
     });
   });
 
-  // Sort by creation date (newest first)
   allTasks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-  // Get status icon based on section title
   const getStatusIcon = (sectionTitle) => {
     const title = sectionTitle.toLowerCase();
     if (title.includes('done') || title.includes('complete')) {
@@ -44,7 +37,6 @@ const AllTasksPage = () => {
     return <Circle className="w-5 h-5 text-muted-foreground" />;
   };
 
-  // Get section icon for move menu
   const getSectionIcon = (title) => {
     const lowerTitle = title.toLowerCase();
     if (lowerTitle.includes('done') || lowerTitle.includes('complete')) {
@@ -56,7 +48,6 @@ const AllTasksPage = () => {
     return <Circle className="w-4 h-4 text-muted-foreground" />;
   };
 
-  // Format date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -66,7 +57,6 @@ const AllTasksPage = () => {
     });
   };
 
-  // Toggle favorite
   const handleToggleFavorite = (task) => {
     dispatch(updateTaskRequest({
       sectionId: task.sectionId,
@@ -77,7 +67,6 @@ const AllTasksPage = () => {
     }));
   };
 
-  // Move task to section
   const handleMoveToSection = (task, targetSectionId) => {
     if (targetSectionId === task.sectionId) return;
     
@@ -94,7 +83,6 @@ const AllTasksPage = () => {
     setShowMoveMenuId(null);
   };
 
-  // Delete task
   const handleDelete = (task) => {
     dispatch(deleteTaskRequest({
       sectionId: task.sectionId,
@@ -103,7 +91,6 @@ const AllTasksPage = () => {
     setOpenMenuId(null);
   };
 
-  // Mark as completed (move to Done section)
   const handleMarkComplete = (task) => {
     const doneSection = sections.find(s => 
       s.title.toLowerCase().includes('done') || s.title.toLowerCase().includes('complete')
@@ -113,7 +100,6 @@ const AllTasksPage = () => {
     }
   };
 
-  // Check if task is completed
   const isTaskCompleted = (task) => {
     const title = task.sectionTitle.toLowerCase();
     return title.includes('done') || title.includes('complete');

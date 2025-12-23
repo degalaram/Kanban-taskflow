@@ -1,4 +1,3 @@
-// Kanban slice (robust, explicit implementation)
 import { createSlice } from '@reduxjs/toolkit';
 
 function generateId() {

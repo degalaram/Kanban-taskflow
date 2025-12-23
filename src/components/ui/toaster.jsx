@@ -1,13 +1,9 @@
-// Toaster component - displays toast notifications
-// Uses the useToast hook to get the list of toasts
 
 import { useToast } from "@/hooks/use-toast";
 
-// Simple Toaster component that displays toast messages
 export function Toaster() {
   const { toasts } = useToast();
 
-  // If no toasts, render nothing
   if (toasts.length === 0) {
     return null;
   }

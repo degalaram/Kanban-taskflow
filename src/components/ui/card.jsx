@@ -1,10 +1,7 @@
-// Card components - container components for content
-// Includes Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-// Main Card container
 const Card = React.forwardRef(function Card(props, ref) {
   const { className, ...rest } = props;
   return (
@@ -17,7 +14,6 @@ const Card = React.forwardRef(function Card(props, ref) {
 });
 Card.displayName = "Card";
 
-// Card Header - usually contains title and description
 const CardHeader = React.forwardRef(function CardHeader(props, ref) {
   const { className, ...rest } = props;
   return (
@@ -30,7 +26,6 @@ const CardHeader = React.forwardRef(function CardHeader(props, ref) {
 });
 CardHeader.displayName = "CardHeader";
 
-// Card Title - the main heading
 const CardTitle = React.forwardRef(function CardTitle(props, ref) {
   const { className, ...rest } = props;
   return (
@@ -43,7 +38,6 @@ const CardTitle = React.forwardRef(function CardTitle(props, ref) {
 });
 CardTitle.displayName = "CardTitle";
 
-// Card Description - subtitle or helper text
 const CardDescription = React.forwardRef(function CardDescription(props, ref) {
   const { className, ...rest } = props;
   return (
@@ -56,7 +50,6 @@ const CardDescription = React.forwardRef(function CardDescription(props, ref) {
 });
 CardDescription.displayName = "CardDescription";
 
-// Card Content - main content area
 const CardContent = React.forwardRef(function CardContent(props, ref) {
   const { className, ...rest } = props;
   return (
@@ -69,7 +62,6 @@ const CardContent = React.forwardRef(function CardContent(props, ref) {
 });
 CardContent.displayName = "CardContent";
 
-// Card Footer - usually contains actions
 const CardFooter = React.forwardRef(function CardFooter(props, ref) {
   const { className, ...rest } = props;
   return (

@@ -1,11 +1,8 @@
-// Separator component - horizontal or vertical line divider
-// Uses Radix UI Separator primitive
 
 import * as React from "react";
 import * as SeparatorPrimitive from "@radix-ui/react-separator";
 import { cn } from "@/lib/utils";
 
-// Separator component
 const Separator = React.forwardRef(function Separator(props, ref) {
   const { className, orientation = "horizontal", decorative = true, ...rest } = props;
   

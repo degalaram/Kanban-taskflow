@@ -1,5 +1,3 @@
-// Favorites Page Component
-// Shows all tasks marked as favorite (starred)
 
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -7,11 +5,9 @@ import { Star, CheckCircle, Clock, Circle } from 'lucide-react';
 import { updateTaskRequest } from '../store/slices/kanbanSlice';
 
 const FavoritesPage = () => {
-  // Get kanban state from Redux store
   const { sections, tasks } = useSelector((state) => state.kanban);
   const dispatch = useDispatch();
 
-  // Get all favorite tasks as a flat array with section info
   const favoriteTasks = [];
   sections.forEach((section) => {
     const sectionTasks = tasks[section.id] || [];
@@ -26,10 +22,8 @@ const FavoritesPage = () => {
     });
   });
 
-  // Sort by creation date (newest first)
   favoriteTasks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-  // Get status icon based on section title
   const getStatusIcon = (sectionTitle) => {
     const title = sectionTitle.toLowerCase();
     if (title.includes('done') || title.includes('complete')) {
@@ -41,7 +35,6 @@ const FavoritesPage = () => {
     return <Circle className="w-5 h-5 text-muted-foreground" />;
   };
 
-  // Format date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -51,7 +44,6 @@ const FavoritesPage = () => {
     });
   };
 
-  // Toggle favorite status
   const toggleFavorite = (task) => {
     dispatch(
       updateTaskRequest({

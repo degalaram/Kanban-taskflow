@@ -1,5 +1,3 @@
-// NotFound Page Component
-// 404 error page for invalid routes
 
 import React from 'react';
 import { Link } from 'react-router-dom';

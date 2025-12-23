@@ -1,6 +1,3 @@
-// Add Task Form Component
-// Form for adding new tasks to a section
-// SIMPLIFIED VERSION - with clear step-by-step comments
 
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -8,27 +5,21 @@ import { addTaskRequest } from '../store/slices/kanbanSlice';
 import { Plus, X } from 'lucide-react';
 
 const AddTaskForm = ({ sectionId, onClose }) => {
-  // STEP 1: Local state for form inputs
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
-  // STEP 2: Get dispatch function
   const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Check if title is not empty
     if (title.trim()) {
       dispatch(addTaskRequest({ sectionId, title: title.trim(), description: description.trim() }));
-      // Clear form
       setTitle('');
       setDescription('');
-      // Close form if provided
       if (onClose) onClose();
     }
   };
 
-  // STEP 4: Handle cancel button
   const handleCancel = () => {
     setTitle('');
     setDescription('');

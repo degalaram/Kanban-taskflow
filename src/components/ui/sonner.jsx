@@ -1,12 +1,8 @@
-// Sonner toast component - wrapper around sonner library
-// Provides themed toast notifications
 
 import { useTheme } from "next-themes";
 import { Toaster as Sonner, toast } from "sonner";
 
-// Toaster component that wraps Sonner with theme support
 const Toaster = function Toaster(props) {
-  // Get current theme from next-themes
   const { theme = "system" } = useTheme();
 
   return (
